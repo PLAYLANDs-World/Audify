@@ -12726,27 +12726,25 @@
                 playlistItem.setAttribute('data-songproducers', track.songproducers);
                 playlistItem.setAttribute('data-footerLyrics', track.footerLyrics);
 
-                playlistItem.style = "--shine-color: rgb(173, 51, 81); --bg-color: linear-gradient(120deg, )";
-
                 playlistItem.innerHTML = `
-                <img src="${track.img}" alt="${track.song}" class="album-cover">
-                <div class="play-btn" onclick="loadSong(${index})">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-music-note-beamed" viewBox="0 0 16 16">
-                        <path d="M6 13c0 1.105-1.12 2-2.5 2S1 14.105 1 13s1.12-2 2.5-2 2.5.896 2.5 2m9-2c0 1.105-1.12 2-2.5 2s-2.5-.895-2.5-2 1.12-2 2.5-2 2.5.895 2.5 2"/>
-                        <path fill-rule="evenodd" d="M14 11V2h1v9zM6 3v10H5V3z"/>
-                        <path d="M5 2.905a1 1 0 0 1 .9-.995l8-.8a1 1 0 0 1 1.1.995V3L5 4z"/>
-                    </svg>
-                </div>
-                <div class="song-info" style="--txt-color: #ffffff;">
-                    <div class="song-title">${track.song}</div>
-                    <div class="artist-name">${track.artist}</div>
-                    <button class="download-btn" onclick="downloadMusic('${track.src}')">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-arrow-down-fill" viewBox="0 0 16 16">
-                            <path d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2m2.354 6.854-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 9.293V5.5a.5.5 0 0 1 1 0v3.793l1.146-1.147a.5.5 0 0 1 .708.708"/>
-                        </svg>
-                    </button>
-                </div>
-            `;
+        <img src="${track.img}" alt="${track.song}" class="album-cover">
+        <div class="play-btn" onclick="loadSong(${index})">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-music-note-beamed" viewBox="0 0 16 16">
+                <path d="M6 13c0 1.105-1.12 2-2.5 2S1 14.105 1 13s1.12-2 2.5-2 2.5.896 2.5 2m9-2c0 1.105-1.12 2-2.5 2s-2.5-.895-2.5-2 1.12-2 2.5-2 2.5.895 2.5 2"/>
+                <path fill-rule="evenodd" d="M14 11V2h1v9zM6 3v10H5V3z"/>
+                <path d="M5 2.905a1 1 0 0 1 .9-.995l8-.8a1 1 0 0 1 1.1.995V3L5 4z"/>
+            </svg>
+        </div>
+        <div class="song-info">
+            <div class="song-title" style="font-weight: bold;">${track.song}</div>
+            <div class="artist-name">${track.artist}</div>
+            <button class="download-btn" onclick="downloadMusic('${track.src}')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-arrow-down-fill" viewBox="0 0 16 16">
+                    <path d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2m2.354 6.854-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L7.5 9.293V5.5a.5.5 0 0 1 1 0v3.793l1.146-1.147a.5.5 0 0 1 .708.708"/>
+                </svg>
+            </button>
+        </div>
+        `;
 
                 playlistContainer.appendChild(playlistItem);
 
@@ -12754,10 +12752,21 @@
                 img.crossOrigin = "Anonymous";
                 img.onload = () => {
                     const dominantColor = colorThief.getColor(img);
-                    playlistItem.style.backgroundColor = `rgb(${dominantColor.join(',')})`;
+                    const shineColor = `rgba(${dominantColor[0] + 90}, ${dominantColor[1] + 30}, ${dominantColor[2] + 50}, 0.6)`;
+                    playlistItem.style.background = `linear-gradient(135deg, rgba(${dominantColor.join(',')}, 0.9), ${shineColor})`;
+
+                    // Apply border shadow shine
+                    playlistItem.style.boxShadow = `0 1px 2px 2px ${shineColor}, 0 0 2px 1px rgba(${dominantColor.join(',')}, 0.2)`;
+
+                    // Calculate brightness and set text color
+                    const brightness = (dominantColor[0] * 299 + dominantColor[1] * 587 + dominantColor[2] * 114) / 1000;
+                    const textColor = brightness > 128 ? '#000000' : '#FFFFFF'; // Black for bright, white for dark
+                    const songInfo = playlistItem.querySelector('.song-info');
+                    songInfo.style.color = textColor;
                 };
             }
         }
+
 
 
         // Download music by opening the file URL
