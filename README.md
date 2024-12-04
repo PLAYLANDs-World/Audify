@@ -1,2 +1,1 @@
-# Music
-PLAYLADNs Audible Music, Listen and Download Millions of Musics all at one place
+Audify © 2024 PLAYLANDs, Inc.
